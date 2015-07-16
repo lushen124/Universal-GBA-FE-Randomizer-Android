@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">GBA FE Randomizer</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="downloads_folder_title">Downloads:</string>
+
+    <string name="placeholder_string">Placeholder String</string>
+    <string name="title_activity_randomizer">RandomizerActivity</string>
+
+    <string name="randomize_button_title">Randomize!</string>
+    <string name="configure_button_title">Configure...</string>
+
+    <string name="setting_cell_title_default">Randomize Setting Title</string>
+    <string name="setting_cell_description_default">Randomize String Description</string>
+    <string name="title_activity_edit_setting">EditSettingActivity</string>
+
+    <string name="edit_settings_subsetting_header">Subsettings</string>
+    <string name="edit_settings_minimum_label">Minimum:</string>
+    <string name="edit_settings_maximum_label">Maximum:</string>
+</resources>

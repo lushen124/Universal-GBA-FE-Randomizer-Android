@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="@dimen/default_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_label"
+        android:text="@string/setting_cell_title_default"
+        android:layout_centerHorizontal="true"
+        android:textSize="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description_label"
+        android:text="@string/setting_cell_description_default"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title_label"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/default_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minimum_label"
+            android:text="@string/edit_settings_minimum_label"
+            android:layout_centerVertical="true"/>
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minimum_value_picker"
+            android:layout_toRightOf="@id/minimum_label"></NumberPicker>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maximum_label"
+            android:text="@string/edit_settings_maximum_label"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/minimum_value_picker"
+            android:layout_marginLeft="@dimen/default_margin"/>
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maximum_value_picker"
+            android:layout_toRightOf="@id/maximum_label"></NumberPicker>
+
+    </RelativeLayout>
+</RelativeLayout>

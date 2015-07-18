@@ -1,15 +1,21 @@
 package com.lushen.otakureborn.gbaferandomizer;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class RandomizerActivity extends ActionBarActivity {
@@ -17,34 +23,39 @@ public class RandomizerActivity extends ActionBarActivity {
     private ListView settingsListView;
     private RandomizeSettingAdapter adapter;
 
-    private BooleanSetting growths;
-    private NumericSetting growthVariance;
-    private BooleanSetting minimumGrowth;
+    private Button randomizeButton;
 
-    private BooleanSetting bases;
-    private NumericSetting baseVariance;
+    private static BooleanSetting growths;
+    private static NumericSetting growthVariance;
+    private static BooleanSetting minimumGrowth;
 
-    private BooleanSetting constitution;
-    private NumericSetting conVariance;
-    private NumericSetting minimumCon;
+    private static BooleanSetting bases;
+    private static NumericSetting baseVariance;
 
-    private BooleanSetting movement;
-    private RangedNumericSetting movementRange;
+    private static BooleanSetting constitution;
+    private static NumericSetting conVariance;
+    private static NumericSetting minimumCon;
 
-    private BooleanSetting affinity;
+    private static BooleanSetting movement;
+    private static RangedNumericSetting movementRange;
 
-    private BooleanSetting items;
-    private NumericSetting mightVariance;
-    private RangedNumericSetting mightRange;
-    private NumericSetting hitVariance;
-    private RangedNumericSetting hitRange;
-    private NumericSetting criticalVariance;
-    private RangedNumericSetting criticalRange;
-    private NumericSetting weightVariance;
-    private RangedNumericSetting weightRange;
-    private NumericSetting durabilityVariance;
-    private RangedNumericSetting durabilityRange;
-    private BooleanSetting assignRandomTraits;
+    private static BooleanSetting affinity;
+
+    private static BooleanSetting items;
+    private static NumericSetting mightVariance;
+    private static RangedNumericSetting mightRange;
+    private static NumericSetting hitVariance;
+    private static RangedNumericSetting hitRange;
+    private static NumericSetting criticalVariance;
+    private static RangedNumericSetting criticalRange;
+    private static NumericSetting weightVariance;
+    private static RangedNumericSetting weightRange;
+    private static NumericSetting durabilityVariance;
+    private static RangedNumericSetting durabilityRange;
+    private static BooleanSetting assignRandomTraits;
+
+    private MainActivity.GameType gameType;
+    private String filePath;
 
     public static ArrayList<RandomizeSetting> randomizingSettings;
 
@@ -53,7 +64,12 @@ public class RandomizerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_randomizer);
 
+        this.gameType = (MainActivity.GameType)getIntent().getSerializableExtra("gameType");
+        this.filePath = getIntent().getStringExtra("filePath");
+
         settingsListView = (ListView) findViewById(R.id.options_list);
+
+        randomizeButton = (Button)findViewById(R.id.randomize_button);
 
         growths = new BooleanSetting("Randomize Growths", "Adds up growth rates for all characters and then re-distributes them randomly across all growth areas.", false);
         growthVariance = new NumericSetting("Variance", "Before re-distribution, adds or subtracts a random amount up to this value to or from the total.", 0, 0, 100, 1);
@@ -89,6 +105,8 @@ public class RandomizerActivity extends ActionBarActivity {
         hitRange = new RangedNumericSetting("Minimum/Maximum Hit Rate", "The range of allowed hit rates for any given weapon.", 0, 255, 0, 255);
         criticalVariance = new NumericSetting("Critical Variance", "The maximum amount to add to or subtract from a weapon's Critical Rate.", 0, 0, 50, 1);
         criticalRange = new RangedNumericSetting("Minimum/Maximum Critical Chance", "The range of allowed critical chances for any given weapon.", 0, 100, 0, 100);
+        weightVariance = new NumericSetting("Weight Variance", "The maximum amount to add to or subtract from a weapon's weight.", 0, 0, 20, 1);
+        weightRange = new RangedNumericSetting("Minimum/Maximum Weight", "The range of allowed weights for any given weapon.", 0, 40, 0, 40);
         durabilityVariance = new NumericSetting("Durability Variance", "The maximum amount to add to or subtract from a weapon's Durability.", 0, 0, 50, 1);
         durabilityRange = new RangedNumericSetting("Minimum/Maximum Durability", "The range of allowed durability values for any given weapon.", 1, 99, 1, 99);
         assignRandomTraits = new BooleanSetting("Assign Random Traits", "For every weapon, adds one of the following traits to it:\n\nDevil Effect\nEclipse Effect\nPoison Effect\nReverse Triangle\nUnbreakable\nBrave Effect\nMagic Damage\nNegates Defense\nRandom Stat Bonus\nRandom Effectiveness", false);
@@ -99,6 +117,8 @@ public class RandomizerActivity extends ActionBarActivity {
         items.addSubsetting(hitRange);
         items.addSubsetting(criticalVariance);
         items.addSubsetting(criticalRange);
+        items.addSubsetting(weightVariance);
+        items.addSubsetting(weightRange);
         items.addSubsetting(durabilityVariance);
         items.addSubsetting(durabilityRange);
         items.addSubsetting(assignRandomTraits);
@@ -125,6 +145,28 @@ public class RandomizerActivity extends ActionBarActivity {
 
                 Intent intent = new Intent(self, EditSettingActivity.class);
                 intent.putExtra("settingIndex", position);
+
+                startActivity(intent);
+            }
+        });
+
+        randomizeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(self, RandomizingActivity.class);
+                intent.putExtra("source", filePath);
+
+                File sourceFile = new File(filePath);
+                File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "FE Randomized");
+                directory.mkdir();
+
+                Calendar calendar = Calendar.getInstance();
+                DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+
+                File destination = new File(directory.getAbsolutePath(), "[Rand " + formatter.format(calendar.getTime()) + "]" + sourceFile.getName());
+                intent.putExtra("destination", destination.getAbsolutePath());
+
+                intent.putExtra("gameType", gameType);
 
                 startActivity(intent);
             }
@@ -158,5 +200,37 @@ public class RandomizerActivity extends ActionBarActivity {
         super.onStart();
 
         adapter.notifyDataSetChanged();
+    }
+
+    public static Boolean shouldRandomizeGrowths() {
+        return growths.isSettingEnabled();
+    }
+
+    public static Integer growthsVariance() {
+        return growthVariance.getValue();
+    }
+
+    public static Boolean shouldUseMinimumGrowths() {
+        return minimumGrowth.isSettingEnabled();
+    }
+
+    public static Boolean shouldRandomizeBases() {
+        return bases.isSettingEnabled();
+    }
+
+    public static Integer basesVariance() {
+        return baseVariance.getValue();
+    }
+
+    public static Boolean shouldRandomizeCON() {
+        return constitution.isSettingEnabled();
+    }
+
+    public static Integer conVariance() {
+        return conVariance.getValue();
+    }
+
+    public static Integer minimumCON() {
+        return minimumCon.getValue();
     }
 }

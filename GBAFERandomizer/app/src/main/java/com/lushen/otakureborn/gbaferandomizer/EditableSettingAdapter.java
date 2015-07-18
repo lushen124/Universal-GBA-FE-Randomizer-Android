@@ -91,6 +91,7 @@ public class EditableSettingAdapter extends ArrayAdapter<RandomizeSetting> {
                 cell = inflater.inflate(R.layout.numeric_setting_cell, null);
                 NumericViewHolder numericHolder = new NumericViewHolder();
                 numericHolder.valuePicker = (NumberPicker)cell.findViewById(R.id.value_picker);
+                numericHolder.valuePicker.setWrapSelectorWheel(false);
                 viewHolder = numericHolder;
             }
             else if (itemType == CellType.RANGED_NUMERIC.ordinal()) {
@@ -98,6 +99,8 @@ public class EditableSettingAdapter extends ArrayAdapter<RandomizeSetting> {
                 RangedNumericViewHolder rangedHolder = new RangedNumericViewHolder();
                 rangedHolder.minimumPicker = (NumberPicker)cell.findViewById(R.id.minimum_value_picker);
                 rangedHolder.maximumPicker = (NumberPicker)cell.findViewById(R.id.maximum_value_picker);
+                rangedHolder.minimumPicker.setWrapSelectorWheel(false);
+                rangedHolder.maximumPicker.setWrapSelectorWheel(false);
                 viewHolder = rangedHolder;
             }
             else {
@@ -132,20 +135,21 @@ public class EditableSettingAdapter extends ArrayAdapter<RandomizeSetting> {
         else if (itemType == CellType.NUMERIC.ordinal()) {
             final NumericSetting numericSetting = (NumericSetting)subsetting;
             NumericViewHolder numericHolder = (NumericViewHolder)holder;
-            numericHolder.valuePicker.setValue(numericSetting.getValue());
             numericHolder.valuePicker.setMaxValue(numericSetting.getMaximumValue());
             numericHolder.valuePicker.setMinValue(numericSetting.getMinimumValue());
+            numericHolder.valuePicker.setValue(numericSetting.getValue());
 
             numericHolder.valuePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                    if (newVal > oldVal) {
-                        numericSetting.setValue(oldVal + numericSetting.getStepSize());
-                    }
-                    else if (newVal < oldVal) {
-                        numericSetting.setValue(oldVal - numericSetting.getStepSize());
-                    }
-                    picker.setValue(numericSetting.getValue());
+//                    if (newVal > oldVal) {
+//                        numericSetting.setValue(oldVal + numericSetting.getStepSize());
+//                    }
+//                    else if (newVal < oldVal) {
+//                        numericSetting.setValue(oldVal - numericSetting.getStepSize());
+//                    }
+//                    picker.setValue(numericSetting.getValue());
+                    numericSetting.setValue(newVal);
                 }
             });
         }

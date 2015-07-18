@@ -18,10 +18,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.RandomAccess;
 
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+
+    public static final Random rng = new Random();
+
+    public enum GameType {
+        Unknown, FE6, FE7, FE8
+    }
 
     private ListView directoryListingView;
     private FileArrayAdapter directoryListAdapter;
@@ -119,6 +126,10 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 if (value == 0x45374541) {
                     Log.d("MAIN_ACTIVITY", "Detected FE7!");
                     Intent intent = new Intent(this, RandomizerActivity.class);
+
+                    intent.putExtra("gameType", GameType.FE7);
+                    intent.putExtra("filePath", file.getAbsolutePath());
+
                     startActivity(intent);
                 }
                 else {

@@ -78,4 +78,11 @@ public class EditSettingActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        this.setTitle(parentSetting.getSettingTitle());
+    }
 }

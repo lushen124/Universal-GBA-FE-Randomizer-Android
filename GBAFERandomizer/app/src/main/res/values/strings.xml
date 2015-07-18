@@ -7,7 +7,7 @@
     <string name="downloads_folder_title">Downloads:</string>
 
     <string name="placeholder_string">Placeholder String</string>
-    <string name="title_activity_randomizer">RandomizerActivity</string>
+    <string name="title_activity_randomizer">Randomization Settings</string>
 
     <string name="randomize_button_title">Randomize!</string>
     <string name="configure_button_title">Configure...</string>
@@ -19,4 +19,7 @@
     <string name="edit_settings_subsetting_header">Subsettings</string>
     <string name="edit_settings_minimum_label">Minimum:</string>
     <string name="edit_settings_maximum_label">Maximum:</string>
+    <string name="title_activity_randomizing">RandomizingActivity</string>
+
+    <string name="busy_randomizing">Randomizing...</string>
 </resources>
